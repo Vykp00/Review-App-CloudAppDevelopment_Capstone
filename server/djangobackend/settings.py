@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'ao5z(o(z@cvzodm99d32jkxa5e8a1!q_4sqss5-a%n6tg$#h$+'
 
@@ -27,11 +27,10 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost"]
-
+# Change this to specific host when it is in production env
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
-
 INSTALLED_APPS = [
     'djangoapp.apps.DjangoappConfig',
     'django.contrib.admin',

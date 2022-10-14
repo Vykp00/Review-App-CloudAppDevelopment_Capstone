@@ -1,0 +1,41 @@
+{% extends 'djangoapp/index.html' %}
+{% load static %}
+
+{% block content %}
+ <!--Add a registration form here -->
+<div class="container-fluid">
+ <div class="row g-3 text-center">
+    <h2>Edit Profile</h2>
+    <div class="card text-center">
+        <form method="post" action="" role="form" class="row gy-2 gx-3 text-center">
+            {% csrf_token %}
+            <h3 class="title is-3">Edit Your Profile</h3>
+            <div class="input-group flex-nowrap col-md-6">
+                <span class="input-group-text" id="email" for="email">Email</span>
+                {{ form.email}}
+            </div>
+            <div class="input-group flex-nowrap col-12">
+                <span class="input-group-text" id="location" for="location">Location</span>
+                {{ form.location }}
+            </div>
+            <div class="input-group flex-nowrap col-12">
+                <span class="input-group-text" id="url" for="url">URl</span>
+                {{ form.url }}
+            </div>
+            <div class="input-group flex-nowrap col-md-6">
+                <span class="input-group-text" id="profile_info" for="profile_info">Profile info</span>
+                {{ form.profile_info }}
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <span style="color: red; font-weight: bold;">{{ form.errors }}</span>
+                </div>
+            </div>
+            <div class="input-group flex-nowrap col-12">
+                <button type="submit" name="action" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}

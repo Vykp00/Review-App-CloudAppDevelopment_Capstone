@@ -13,11 +13,11 @@
 <body>
     <!--Add a registration form here -->
     <div class="row g-3 text-center">
-        <h2>Sign up</h2>
-        <div class="card text-center">
-            <form method="post" action="" role="form" class="row gy-2 gx-3 text-center">
-                {% csrf_token %}
-                <h3 class="title is-3">Create an account</h3>
+        <h2>Login</h2>
+        <form method="post" action="{% url 'djangoapp:login' %}" role="form" class="row gy-2 gx-3 text-center">
+            {% csrf_token %}
+            <div class="contain-fluid">
+                <h3 class="title is-3">Login</h3>
                 <div class="input-group flex-nowrap col-md-6">
                     <span class="input-group-text" id="username" for="username">Username</span>
                     {{ form.username }}
@@ -26,28 +26,16 @@
                     <span class="input-group-text" id="password" for="password">Password</span>
                     {{ form.password }}
                 </div>
-                <div class="input-group flex-nowrap col-12">
-                    <span class="input-group-text" id="confirm_password" for="confirm_password">Confirm password</span>
-                    {{ form.confirm_password }}
-                </div>
-                <div class="input-group flex-nowrap col-md-6">
-                    <span class="input-group-text" id="first_name" for="first_name">First Name</span>
-                    {{ form.first_name }}
-                </div>
-                <div class="input-group flex-nowrap col-md-6">
-                    <span class="input-group-text" id="last_name" for="last_name">Last Name</span>
-                    {{ form.last_name }}
-                </div>
                 <div class="row">
                     <div class="col s12">
                         <span style="color: red; font-weight: bold;">{{ form.errors }}</span>
                     </div>
                 </div>
-                <div class="input-group flex-nowrap col-12">
-                    <button type="submit" name="action" class="btn btn-primary">Submit</button>
+                <div class="form-control">
+                    <button type="submit" name="action" class="btn btn-primary" value="login">Login</button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
     <!--Javascript-->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
