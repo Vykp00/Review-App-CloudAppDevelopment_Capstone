@@ -1,12 +1,18 @@
 import email
+from email.policy import default
+from multiprocessing.util import ForkAwareThreadLock
+from random import choices
+from tabnanny import verbose
+from unicodedata import name
+from unittest.util import _MAX_LENGTH
 from django.utils.timezone import now
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 import sys
 from django.db.models.signals import post_save
-# PIL has been depreciated use Pillow instead
 from django.conf import settings
 import os
-
+import uuid
 try:
     from django.db import models
 except Exception:
@@ -49,7 +55,12 @@ post_save.connect(save_profile, sender=User)
 # - Description
 # - Any other fields you would like to include in car make model
 # - __str__ method to print a car make object
+class CarMake(models.Model):
+    name = models.CharField(max_length=100, null=False, default='car make', verbose_name='Title')
+    description = models.CharField(max_length=500)
 
+    def __str__(self):
+        return self.name
 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
 # - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
@@ -59,7 +70,23 @@ post_save.connect(save_profile, sender=User)
 # - Year (DateField)
 # - Any other fields you would like to include in car model
 # - __str__ method to print a car make object
+class CarModel(models.Model):
+    car_make= models.ForeignKey(CarMake, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, null=False, default='car model', verbose_name='Title')
+    dealerId = models.IntegerField()
+    SEDAN = 'Sedan'
+    SUV = 'SUV'
+    WAGON = 'WAGON'
+    TYPE_CHOICES = [
+        (SEDAN, 'Sedan'),
+        (SUV, 'SUV'),
+        (WAGON, 'WAGON'),
+    ]
+    cartype = models.CharField(null=False, max_length=10, choices=TYPE_CHOICES, default=SEDAN)
+    year = models.DateField(null=True)
 
+    def __str__(self):
+        return self.name
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 
