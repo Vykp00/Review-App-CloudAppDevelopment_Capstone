@@ -11,7 +11,8 @@ urlpatterns = [
     # route is a string contains a URL pattern
     # view refers to the view function
     # name the URL
-    path('', views.index, name='index'),
+    path('', views.index, name='home'),
+    path('', views.get_dealerships, name='index'),
     # path for about view
     path('djangoapp/about', views.about, name='about'),
 

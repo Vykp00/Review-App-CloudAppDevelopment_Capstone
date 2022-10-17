@@ -2,8 +2,10 @@ import email
 from email.policy import default
 from multiprocessing.util import ForkAwareThreadLock
 from random import choices
+from statistics import mode
 from tabnanny import verbose
 from unicodedata import name
+from unittest.mock import sentinel
 from unittest.util import _MAX_LENGTH
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -89,6 +91,48 @@ class CarModel(models.Model):
         return self.name
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
+class CarDealer:
+    def __init__(self, address, city, full_name, id, lat, long, short_name, st, zip):
+        # Dealer address
+        self.address = address
+        # Dealer city
+        self.city = city
+        # Dealer full name:
+        self.full_name = full_name
+        # Dealer id:
+        self.id = id
+        # Location latitude
+        self.lat = lat
+        # Location longitude
+        self.long = long
+        # Dealer short name
+        self.short_name = short_name
+        # Dealer state
+        self.st = st
+        # Dealer zipcode
+        self.zip = zip
+
+    def __str__(self):
+        return "Dealer name: " + self.full_name
 
 
 # <HINT> Create a plain Python class `DealerReview` to hold review data
+class DealerReview(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    dealership = models.CharField(max_length=100, null=False, default='dealership', verbose_name='Dealership')
+    name = models.CharField(max_length=100, null=False, default='name', verbose_name='Name')
+    purchase = models.CharField(max_length=50, null=False, default='purchase', verbose_name='Purchase')
+    review = models.TextField(max_length=500, null=False, default='review', verbose_name='Review')
+    purchase_date = models.DateField(auto_now_add=True)
+    car_make = models.ForeignKey(CarMake, on_delete=models.DO_NOTHING)
+    car_model = models.ForeignKey(CarModel, on_delete=models.DO_NOTHING)
+    car_year = models.DateField(auto_now_add=True, null=True)
+    POSITIVE = 'positive'
+    NEUTRAL = 'neutral'
+    NEGATIVE = 'negative'
+    TYPE_CHOICES = [
+        (POSITIVE, 'positive'),
+        (NEUTRAL, 'neutral'),
+        (NEGATIVE, 'negative'),
+    ]
+    sentiment= models.CharField(null=False, max_length=10, choices=TYPE_CHOICES, default=NEUTRAL)

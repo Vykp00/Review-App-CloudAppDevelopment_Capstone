@@ -14,6 +14,8 @@ import json
 from djangoapp.forms import EditProfileForm, SignupForm
 from django.contrib.auth.decorators import login_required
 
+from djangoapp.restapis import get_dealers_from_cf
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -110,7 +112,16 @@ def Registration(request):
  #   context = {}
   #  if request.method == "GET":
    #     return render(request, 'djangoapp/index.html', context)
-
+def get_dealerships(request):
+    if request.method == "GET":
+            url = "https://eu-de.functions.appdomain.cloud/api/v1/web/vy.le9824%40gmail.com_mydev-de/dealership-package"
+            # Get dealers from the URL
+            dealerships = get_dealers_from_cf(url)
+            # Concat all dealer's short name
+            dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+            # Return a list of dealer short name
+            return HttpResponse(dealer_names)
+            
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
