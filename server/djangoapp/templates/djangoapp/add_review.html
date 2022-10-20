@@ -1,16 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css"
+        rel="stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
 </head>
-    <body>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow p-3 mb-5 bg-gradient" style="background-color: #029177;">
+        <!-- Navbar content -->
+        <div class="container-fluid">
+          <a class="navbar-brand left" href="#">Best Car</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 position-absolute top-50 end-0 translate-middle-y">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'djangoapp:about' %}">About us</a>
+              </li>
+              {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="btn btn-light" href="#">{{ user.first_name }}({{ user.username }})</a>
+                <a class="btn btn-light" href="{% url 'djangoapp:logout' %}">Logout</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                  {% csrf_token %}
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Username" name="username">
+                    <input type="password" class="form-control" placeholder="Password" name="password">
+                    <button class="btn btn-primary" type="submit">Login</button>
+                    <a class="btn btn-light" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                  </div>
+                </form>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
     <!--Add review form here -->
-    </body>
+    <main class="container">
+        <h1>New review</h1>
+        <h4><i>for {{dealer.full_name}}</i></h4>
+        <br>
+        <!--review form -->
+        <form action="/djangoapp/dealer/{{dealer.id}}/add-review/" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="content"><b>Enter the review content:</b></label>
+                <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
+            </div>
+            <div class="form-group form-check">
+                <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
+                <label for="purchasecheck">Did you purchase the car? </label>
+            </div>
+            <div class="form-group">
+                <label for="car">Select your car:</label>
+                <select name="car" id="car" class="form-select">
+                    {% for car in cars %}
+                        <option selected value={{car.id}}>{{car.car_make.name}} {{car.name}} {{ car.year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" data-provide="datepicker">
+                <label for="purchasedate">Select your purchase date (mm/dd/yyyy):</label>
+                <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </main>
+    <script type="text/javascript">
+        $('.date-own').datepicker({
+           format: 'dd/mm/yyyy'
+         });
+   </script>
+   <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+   <script
+       rc="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+   <script src="https://unpkg.com/@popperjs/core@2"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+
 </html>

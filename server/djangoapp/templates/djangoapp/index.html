@@ -55,6 +55,30 @@
 
       {% block content %}
       {% endblock %}
+      <table class="table table-striped" id="table" data-filter-control="true" style="margin-top: 3rem; margin-bottom: 3rem;">
+        <thread>
+          <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Dealer Name</th>
+              <th scope="col">City</th>
+              <th scope="col">Address</th>
+              <th scope="col">Zip</th>
+              <th data-field="state" data-filter-control="select">State</th>
+          </tr>
+        </thread>
+        <tbody>
+          {% for dealer in dealerships %}
+          <tr>
+            <td style="padding: 2rem;">{{dealer.id}}</td>
+            <td style="padding: 2rem;"><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
+            <td style="padding: 2rem;">{{dealer.city}}</td>
+            <td style="padding: 2rem;">{{dealer.address}}</td>
+            <td style="padding: 2rem;">{{dealer.zip}}</td>
+            <td style="padding: 2rem;">{{dealer.st}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
   <br>
@@ -96,6 +120,11 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  $(function() {
+      $('#table').bootstrapTable()
+  })
+</script>
 {% block javascript %}
 {% endblock %}
 </body>

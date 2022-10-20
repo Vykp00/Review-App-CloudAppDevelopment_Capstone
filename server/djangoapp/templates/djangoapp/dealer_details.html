@@ -1,18 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dealership Review</title>
     {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
 </head>
 
-    <body>
+<body>
 
     <!--Add a nav bar here -->
-
+    <nav class="navbar navbar-expand-lg navbar-dark shadow p-3 mb-5 bg-gradient" style="background-color: #029177;">
+        <!-- Navbar content -->
+        <div class="container-fluid">
+            <a class="navbar-brand left" href="#">Best Car</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 position-absolute top-50 end-0 translate-middle-y">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'djangoapp:about' %}">About us</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="btn btn-light" href="#">{{ user.first_name }}({{ user.username }})</a>
+                        <a class="btn btn-light" href="{% url 'djangoapp:logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Username" name="username">
+                                <input type="password" class="form-control" placeholder="Password" name="password">
+                                <button class="btn btn-primary" type="submit">Login</button>
+                                <a class="btn btn-light" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                            </div>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
     <!-- Add reviews as cards -->
-
-    </body>
+    <!-- Only registered user can write review-->
+    {% if reviews %}
+    {% if user.is_authenticated %}
+    <div style="margin: 10rem;">
+        <a class="btn btn-primary" href="{% url 'djangoapp:add_review' dealer_id %}"><b>Write a car review</b></a>
+    </div>
+    {% endif %}
+    <div class="card-columns">
+        {% for review in reviews %}
+        {% if review.car_make %}
+        <div class="card" style="height: 300px; overflow: scroll; overflow-x: hidden;">
+            <img src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png" class="card-img-left"
+                style="float: left; height: 40px; width: 40px; display: inline-block;">
+            <div class="card-body" style="text-align: center;">
+                <h5 class="card-title" style="display: inline-block;">{{ review.car_make }}, {{ review.car_model }}</h5>
+                <h5 class="card-title">{{ review.car_year }}</h5>
+                <p class="card-text" style="text-align: left;">{{ review.review }}</p>
+            </div>
+        </div>
+        <!-- some review data may be missing , using default values-->
+        {% else %}
+        <div class="card" style="height: 300px; overflow: scroll; overflow-x: hidden;">
+            <img src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png" class="card-img-left"
+                style="float: left; height: 40px; width: 40px; display: inline-block;">
+            <div class="card-body" style="text-align: center;">
+                <h5 class="card-title" style="display: inline-block;">Review</h5>
+                <h5 class="card-title"></h5>
+                <p class="card-text" style="text-align: left;">{{ review.review }}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <p></br>There are no reviews for this dealership.</br></p>
+    {% if user.is authenticated %}
+    {% if user.is_authenticated %}
+    <div style="margin: 10px;">
+        <a class="btn btn-primary" href="{% url 'djangoapp:add_review' dealer_id %}"><b>Write a car review</b></a>
+    </div>
+    {% endif %}
+    {% endif %}
+    <div class="card fixed-bottom border-light shadow p-3 mb-5 bg-gradient" style="background-color: #029177;">
+        <div class="card-header">
+          <h5 class="text-white">Best Car</h5>
+        </div>
+        <div class="card-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col l6 s12">
+                <p class="text-black-50">We are a team of college students working on this project like
+                  it's our full time job. Any amount would help support and continue development on this project
+                  and is greatly appreciated.</p>
+              </div>
+              <div class="col l4 offset-l2 s12 ">
+                <h5 class="text-white">Informations</h5>
+                <ul>
+                  <li><a class=".text-black-50" href="{% url 'djangoapp:contact' %}">Contact us</a></li>
+                  <li><a class=".text-black-50" href="#!">Link 2</a></li>
+                  <li><a class=".text-black-50" href="#!">Link 3</a></li>
+                  <li><a class=".text-black-50" href="#!">Link 4</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+              © 2014 Copyright Text
+              <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!--Javascript-->
+    <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+    <script rc="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 
 </html>

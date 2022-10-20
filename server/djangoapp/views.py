@@ -15,8 +15,8 @@ import json
 from djangoapp.forms import EditProfileForm, SignupForm
 from django.contrib.auth.decorators import login_required
 
-from djangoapp.restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
-from server.djangoapp.models import CarModel
+from djangoapp.restapis import get_dealer_by_id, get_dealers_from_cf,get_dealers_by_state,get_dealer_reviews_from_cf,post_request
+from djangoapp.models import CarModel, CarDealer, CarMake, DealerReview
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ def Registration(request):
 def get_dealerships(request):
     if request.method == "GET":
         context = {}
-        url = 'https://eu-de.functions.appdomain.cloud/api/v1/web/vy.le9824%40gmail.com_mydev-de/dealership-package/get-dealership'
+        url = 'https://eu-de.functions.appdomain.cloud/api/v1/web/vy.le9824%40gmail.com_mydev-de/dealership-package/get-dealership.json'
         # Get dealers from the URL
         context["dealerships"] = get_dealers_from_cf(url)
         # Concat all dealer's short name
@@ -143,6 +143,15 @@ def get_dealer_details(request, dealer_id):
 def add_review(request, dealer_id):
     # Verify the user is authenticated
     if request.user.is_authenticated:
+        # GET request renders the page with the form for filling out a review
+        if request.method == "GET":
+            url = "https://5b93346d.us-south.apigw.appdomain.cloud/dealerships/dealer-get?dealerId={dealer_id}"
+            # Get dealer details from the API
+            context = {
+                "cars": CarModel.objects.all(),
+                "dealer": get_dealer_by_id(url, dealer_id=dealer_id),
+            }
+            return render(request, 'djangoapp/add_review.html', context)
         # POST request posts the content in the review submission form to the Cloudant DB using the post_review Cloud Function
         if request.method == "POST":
             form = request.POST
