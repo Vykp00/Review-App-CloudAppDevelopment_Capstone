@@ -19,7 +19,7 @@
                     db: 'dealerships',
                     includeDocs: true,
                 });
-                return { "docs": dbDoc.result.rows};
+                return { "dbs": dbDoc.result.rows};
                 } catch (error) {
                     return { error: error.description };
                 }

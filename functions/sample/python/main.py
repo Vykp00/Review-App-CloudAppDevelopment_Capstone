@@ -13,15 +13,17 @@ import requests
 
 
 def main(dict):
-    databaseName = "dealerships"
+    databaseName = "reviews"
 
     try:
         client = Cloudant.iam(
-            account_name=dict["COUCH_USERNAME"],
-            api_key=dict["IAM_API_KEY"],
+            account_name=dict["19a1a093-eb76-4bd7-b854-2dffa807b7a5-bluemix"],
+            api_key=dict["4-PnQyyuvd8ON4UvdiTLGv84UftA0HTQddgoGHASWaxA"],
             connect=True,
         )
-        print("Databases: {0}".format(client.all_dbs()))
+        print("Databases: {0}".format(client.post_all_docs(
+            db='reviews',
+            include_docs=True,).get_result()))
     except CloudantException as ce:
         print("unable to connect")
         return {"error": ce}

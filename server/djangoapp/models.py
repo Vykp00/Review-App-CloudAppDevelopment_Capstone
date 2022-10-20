@@ -75,7 +75,7 @@ class CarMake(models.Model):
 class CarModel(models.Model):
     car_make= models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, null=False, default='car model', verbose_name='Title')
-    dealerId = models.IntegerField()
+    dealer_id = models.IntegerField()
     SEDAN = 'Sedan'
     SUV = 'SUV'
     WAGON = 'WAGON'
@@ -117,22 +117,23 @@ class CarDealer:
 
 
 # <HINT> Create a plain Python class `DealerReview` to hold review data
-class DealerReview(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    dealership = models.CharField(max_length=100, null=False, default='dealership', verbose_name='Dealership')
-    name = models.CharField(max_length=100, null=False, default='name', verbose_name='Name')
-    purchase = models.CharField(max_length=50, null=False, default='purchase', verbose_name='Purchase')
-    review = models.TextField(max_length=500, null=False, default='review', verbose_name='Review')
-    purchase_date = models.DateField(auto_now_add=True)
-    car_make = models.ForeignKey(CarMake, on_delete=models.DO_NOTHING)
-    car_model = models.ForeignKey(CarModel, on_delete=models.DO_NOTHING)
-    car_year = models.DateField(auto_now_add=True, null=True)
-    POSITIVE = 'positive'
-    NEUTRAL = 'neutral'
-    NEGATIVE = 'negative'
-    TYPE_CHOICES = [
-        (POSITIVE, 'positive'),
-        (NEUTRAL, 'neutral'),
-        (NEGATIVE, 'negative'),
-    ]
-    sentiment= models.CharField(null=False, max_length=10, choices=TYPE_CHOICES, default=NEUTRAL)
+class DealerReview:
+
+    def __init__(self, dealership, name, purchase, id, review, sentiment, **kwargs):
+        
+        self.dealership = dealership
+        self.name = name
+        self.purchase = purchase
+        self.id = id
+        self.review = review
+        self.sentiment = sentiment
+        
+        if purchase:
+            self.purchase_date = kwargs["purchase_date"]
+            self.car_make = kwargs["car_make"]
+            self.car_model = kwargs["car_model"]
+            self.car_year = kwargs["car_year"]
+        
+        
+    def __str__(self):
+        return "Review: " + self.review
